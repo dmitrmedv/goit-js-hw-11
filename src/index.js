@@ -17,7 +17,8 @@ function onSearchFormSubmit(e) {
   pixabayInstanse.query = inputEl.value;
   pixabayInstanse
     .fetchImages()
-    .then(({ data }) => renderMarkup(createMarkup(data.hits)));
+    .then(({ data }) => createMarkup(data.hits))
+    .then(renderMarkup);
   e.target.reset();
 }
 
