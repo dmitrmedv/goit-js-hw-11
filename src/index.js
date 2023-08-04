@@ -7,13 +7,15 @@ import PixabayAPI from './pixabay-api';
 const pixabayInstanse = new PixabayAPI();
 
 const searchFormEl = document.querySelector('.search-form');
-const inputEl = document.querySelector('.one');
+const inputEl = document.querySelector('input');
 const galleryEl = document.querySelector('.gallery');
+const btn = document.querySelector('button');
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 
 function onSearchFormSubmit(e) {
   e.preventDefault();
+  galleryEl.innerHTML = '';
   pixabayInstanse.query = inputEl.value;
   pixabayInstanse
     .fetchImages()
@@ -34,24 +36,28 @@ function createMarkup(data) {
         comments,
         downloads,
       }) => {
-        return `<a href=${largeImageURL}>
+        return `
         <div class="photo-card">
-  <img src=${webformatURL} alt=${tags} loading="lazy" />
+  <a href=${largeImageURL}><img src=${webformatURL} alt=${tags} loading="lazy" /></a>
   <div class="info">
     <p class="info-item">
-      <b>${likes}</b>
+    <b>Likes</b>
+      ${likes}
     </p>
     <p class="info-item">
-      <b>${views}</b>
+    <b>Views</b>
+      ${views}
     </p>
     <p class="info-item">
-      <b>${comments}</b>
+    <b>Comments</b>
+      ${comments}
     </p>
     <p class="info-item">
-      <b${downloads}</b>
+    <b>Downloads</b>
+      ${downloads}
     </p>
   </div>
-</div></a>`;
+</div>`;
       }
     )
     .join('');

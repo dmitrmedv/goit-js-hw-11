@@ -21,7 +21,7 @@ export default class PixabayAPI {
     return axios.get(`${this.#BASE_URL}?${baseSearchParams}`);
   }
 
-  changePage() {
-    return (this.page = +this.page);
+  incrementPage() {
+    return (this.page += 1);
   }
 }

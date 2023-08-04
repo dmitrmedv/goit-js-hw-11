@@ -1,9 +1,10 @@
-@import '~node_modules/modern-normalize/modern-normalize.css';
-
 .search-form {
   display: flex;
   background-color: #4e60b6;
   justify-content: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 .input-block {
