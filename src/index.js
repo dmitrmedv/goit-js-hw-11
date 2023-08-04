@@ -11,15 +11,17 @@ const inputEl = document.querySelector('input');
 const galleryEl = document.querySelector('.gallery');
 const btn = document.querySelector('button');
 
-function onSearchFormSubmit(e) {
-  e.preventDefault();
+searchFormEl.addEventListener('submit', onSearchFormSubmit);
+
+function onSearchFormSubmit(event) {
+  event.preventDefault();
   galleryEl.innerHTML = '';
   pixabayInstanse.query = inputEl.value;
   pixabayInstanse
     .fetchImages()
     .then(({ data }) => createMarkup(data.hits))
     .then(renderMarkup);
-  e.target.reset();
+  event.target.reset();
 }
 
 function createMarkup(data) {
