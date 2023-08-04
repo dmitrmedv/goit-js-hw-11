@@ -9,19 +9,49 @@ const pixabayInstanse = new PixabayAPI();
 const searchFormEl = document.querySelector('.search-form');
 const inputEl = document.querySelector('input');
 const galleryEl = document.querySelector('.gallery');
-const btn = document.querySelector('button');
+const loadMoreBtn = document.querySelector('.load-more');
+galleryEl.addEventListener('click', onGalleryClick);
 
+loadMoreBtn.classList.add('hide');
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
+loadMoreBtn.addEventListener('click', loadMore);
 
 function onSearchFormSubmit(event) {
   event.preventDefault();
+  if (!inputEl.value) {
+    return;
+  }
   galleryEl.innerHTML = '';
-  pixabayInstanse.query = inputEl.value;
+  // pixabayInstanse.resetPage();
+  loadMoreBtn.classList.add('hide');
+  pixabayInstanse.query = inputEl.value.trim();
   pixabayInstanse
     .fetchImages()
-    .then(({ data }) => createMarkup(data.hits))
-    .then(renderMarkup);
-  event.target.reset();
+    .then(({ data: { totalHits, hits } }) => {
+      if (!totalHits) {
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      }
+      if (totalHits > pixabayInstanse.per_page) {
+        loadMoreBtn.classList.remove('hide');
+      }
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      pixabayInstanse.changePage();
+      return createMarkup(hits);
+    })
+    .then(renderMarkup)
+    .catch(error => console.log(error));
+  // event.target.reset();
+}
+
+function loadMore() {
+  pixabayInstanse
+    .fetchImages()
+    .then(({ data: { totalHits, hits } }) => {
+      pixabayInstanse.changePage();
+      if (totalHits) return createMarkup(hits);
+    })
+    .then(renderMarkup)
+    .catch(error => console.log(error));
 }
 
 function createMarkup(data) {
@@ -63,6 +93,16 @@ function createMarkup(data) {
     .join('');
 }
 
+function onGalleryClick(event) {
+  event.preventDefault();
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+}
+
 function renderMarkup(murkup) {
   galleryEl.insertAdjacentHTML('beforeend', murkup);
+  new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
+  });
 }
