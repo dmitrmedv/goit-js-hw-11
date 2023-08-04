@@ -113,16 +113,3 @@ function createMarkup(data) {
 function renderMarkup(murkup) {
   galleryEl.insertAdjacentHTML('beforeend', murkup);
 }
-
-const BASE_URL = 'https://restcountries.com/v3.1/name/';
-
-async function fetchCountry() {
-  const response = await fetch(`${BASE_URL}Ukraine`);
-  if (!response.ok) {
-    throw new Error(response.status);
-  }
-  const data = await response.json();
-  return data;
-}
-
-fetchCountry().then(console.log).catch(console.log);
